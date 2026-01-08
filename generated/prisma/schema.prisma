@@ -1,0 +1,49 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+model Document {
+  id        Int           @id @default(autoincrement())
+  name      String
+  createdAt DateTime      @default(now())
+  chunks    Chunk[]
+  sessions  ChatSession[]
+}
+
+model Chunk {
+  id         Int        @id @default(autoincrement())
+  content    String
+  position   Int
+  document   Document   @relation(fields: [documentId], references: [id])
+  documentId Int
+  embedding  Embedding?
+}
+
+model Embedding {
+  id      Int   @id @default(autoincrement())
+  vector  Json
+  chunk   Chunk @relation(fields: [chunkId], references: [id])
+  chunkId Int   @unique
+}
+
+model ChatSession {
+  id         Int           @id @default(autoincrement())
+  documentId Int?
+  document   Document?     @relation(fields: [documentId], references: [id])
+  messages   ChatMessage[]
+  createdAt  DateTime      @default(now())
+}
+
+model ChatMessage {
+  id        Int         @id @default(autoincrement())
+  role      String
+  content   String
+  session   ChatSession @relation(fields: [sessionId], references: [id])
+  sessionId Int
+  createdAt DateTime    @default(now())
+}
