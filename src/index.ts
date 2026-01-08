@@ -6,7 +6,7 @@ import uploadRoutes from "./routes/upload";
 const app = express();
 
 app.use(cors({
-  origin: "https://testnext-production.up.railway.app",
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
