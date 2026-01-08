@@ -1,16 +1,20 @@
-import 'dotenv/config';
-import express from 'express';
-import uploadRoutes from './routes/upload';
-import chatRoutes from './routes/chat';
-
+import express from "express";
+import cors from "cors";
+import chatRoutes from "./routes/chat";
+import uploadRoutes from "./routes/upload";
 
 const app = express();
 
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 app.use(express.json());
 
-app.use('/upload', uploadRoutes);
-app.use('/chat', chatRoutes);
+app.use("/chat", chatRoutes);
+app.use("/upload", uploadRoutes);
 
-app.listen(4000, () => {
-  console.log('Server started on :4000');
-});
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
